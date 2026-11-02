@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andy the Barbers - Agendar Cita</title>
+    <style>
+        :root {
+            --primary-color: #d4af37;
+            --bg-color: #0f0f0f;
+            --card-bg: #1e1e1e;
+            --text-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #2b2b2b;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: #000;
+            padding: 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .success-message {
+            display: none;
+            background-color: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Andy the Barber's ✂️</h1>
+        <p style="color: #aaa; margin-top: 5px;">Reserva tu espacio profesional</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Reserva tu Cita</h2>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="clientName">Nombre y Apellido:</label>
+                    <input type="text" id="clientName" required placeholder="Ej. Mateo Gomez">
+                </div>
+                <div class="form-group">
+                    <label for="service">Servicio:</label>
+                    <select id="service">
+                        <option value="Corte Clásico - $8">Corte Clásico - $8</option>
+                        <option value="Corte + Barba - $12">Corte + Barba - $12</option>
+                        <option value="Diseño / Delineado - $6">Diseño / Delineado - $6</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">Sucursal:</label>
+                    <select id="location">
+                        <option value="Local 1: Río Cutuchi y Río Palora">Local 1: Río Cutuchi y Río Palora</option>
+                        <option value="Local 2: Pichincha Mancocapa">Local 2: Pichincha Mancocapa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Fecha y Hora:</label>
+                    <input type="datetime-local" id="date" required>
+                </div>
+                <button type="submit" class="btn-submit">Agendar Cita</button>
+            </form>
+            <div id="successAlert" class="success-message">¡Cita agendada con éxito! Te esperamos.</div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('appointmentForm');
+        const successAlert = document.getElementById('successAlert');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const clientName = document.getElementById('clientName').value;
+            const service = document.getElementById('service').value;
+            const location = document.getElementById('location').value;
+            const date = document.getElementById('date').value;
+
+            const newAppointment = {
+                id: Date.now(),
+                clientName,
+                service,
+                location,
+                date: new Date(date).toLocaleString()
+            };
+
+            // Guarda en el almacenamiento local del navegador
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            appointments.push(newAppointment);
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+
+            // Muestra mensaje de éxito y limpia el formulario
+            form.reset();
+            successAlert.style.display = 'block';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 4000);
+        });
+    </script>
+</body>
+</html>
